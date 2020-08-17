@@ -26,7 +26,7 @@ def should_refinance(refin_file):
             extra_monthly = float(row['extra_monthly'])
             loan_starting_month = int(row['loan_starting_month'])
             monthly_payment = calculate_monthly(loan_amount, interest, loan_months)
-            print(monthly_payment)
+            print('monthly_payment:', monthly_payment)
             loan_balance = loan_amount
             if loan_starting_month > 0 and len(loan_payments) > 0:
                 wasted_interest_payments = 0
