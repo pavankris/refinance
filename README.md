@@ -8,7 +8,8 @@
 
 **Output**
 `('total_interest_paid: ', 527393.0127732742, ' in_months:', 345, ' with_monthly_payment', 4032.1967741793305)`
-The total interest paid for the loan and how many months will the loan payout and what's the monthly payment
+
+The total interest paid for the loan and how many months will the loan payout and what's the monthly payment.
 You need to add with_monthly_payment and extra monthly from the row to see how much monthly is actually going from your bank.
 
 **Ideal would be to make sure the loan term doesn't change from refinance, so adjust extra monthly in refinance row and calculate the gain because of refinance** 
