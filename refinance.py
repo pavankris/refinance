@@ -14,6 +14,9 @@ def calculate_monthly(loan_amount, interest, loan_months):
 def calculate_interest(balance, interest):
     return balance * (interest/12/100)
 
+def calculate_simple_interest(p,n,r):
+    return p*n*r/100
+
 def should_refinance(refin_file):
     loan_payments = []
     with open(refin_file) as csvfile:
@@ -30,14 +33,20 @@ def should_refinance(refin_file):
             loan_balance = loan_amount
             if loan_starting_month > 0 and len(loan_payments) > 0:
                 wasted_interest_payments = 0
+                principle_gained = 0
                 for i in range(loan_starting_month):
                     wasted_interest_payments += loan_payments[0][i]['interest_payment']
+                    principle_gained += loan_payments[0][i]['starting_balance'] - loan_payments[0][i]['ending_balance']
+
+                actual_interest_for_principle = calculate_simple_interest(principle_gained, loan_starting_month, loan_payments[0][i]['interest'])
+                wasted_interest_payments -= actual_interest_for_principle
                 loan_payments_row.append({
                     'month': 0,
                     'starting_balance': loan_balance,
                     'interest_payment': wasted_interest_payments,
                     'principle_payment': 0.0,
-                    'ending_balance': ending_balance
+                    'ending_balance': ending_balance,
+                    'interest': loan_payments[0][i]['interest']
                 })
             for i in range(loan_months):
                 interest_payment = calculate_interest(loan_balance, interest)
@@ -48,17 +57,19 @@ def should_refinance(refin_file):
                     'starting_balance': loan_balance,
                     'interest_payment': interest_payment,
                     'principle_payment': principle_payment,
-                    'ending_balance': ending_balance
+                    'ending_balance': ending_balance,
+                    'interest': interest
                 })
                 loan_balance = ending_balance
                 if ending_balance <= 0:
                     break
             loan_payments.append(loan_payments_row)
-    for payments in loan_payments:
+
+    for idx, payments in enumerate(loan_payments):
         total_interest_paid = 0.0
         for monthly_payments in payments:
             total_interest_paid += monthly_payments['interest_payment']
-        print('total_interest_paid: ', total_interest_paid)
+        print('total_interest_paid: ', total_interest_paid, ' in months:', len(payments) - idx)
 
 
 def main():
