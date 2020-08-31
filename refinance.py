@@ -29,7 +29,6 @@ def should_refinance(refin_file):
             extra_monthly = float(row['extra_monthly'])
             loan_starting_month = int(row['loan_starting_month'])
             monthly_payment = calculate_monthly(loan_amount, interest, loan_months)
-            print('monthly_payment:', monthly_payment)
             loan_balance = loan_amount
             if loan_starting_month > 0 and len(loan_payments) > 0:
                 wasted_interest_payments = 0
@@ -58,7 +57,9 @@ def should_refinance(refin_file):
                     'interest_payment': interest_payment,
                     'principle_payment': principle_payment,
                     'ending_balance': ending_balance,
-                    'interest': interest
+                    'interest': interest,
+                    'monthly_payment': monthly_payment,
+                    'extra_monthly': extra_monthly
                 })
                 loan_balance = ending_balance
                 if ending_balance <= 0:
@@ -67,9 +68,10 @@ def should_refinance(refin_file):
 
     for idx, payments in enumerate(loan_payments):
         total_interest_paid = 0.0
-        for monthly_payments in payments:
-            total_interest_paid += monthly_payments['interest_payment']
-        print('total_interest_paid: ', total_interest_paid, ' in months:', len(payments) - idx)
+        for monthly_loan_info in payments:
+            total_interest_paid += monthly_loan_info['interest_payment']
+        monthly_payment = payments[0]['monthly_payment'] if idx == 0 else payments[1]['monthly_payment']
+        print('total_interest_paid: ', total_interest_paid, ' in_months:', len(payments) - idx, ' with_monthly_payment', monthly_payment)
 
 
 def main():
